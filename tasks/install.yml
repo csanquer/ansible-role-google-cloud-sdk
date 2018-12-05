@@ -1,0 +1,32 @@
+---
+- name: add google cloud repository GPG key
+  apt_key:
+    url: "{{ google_cloud_sdk_apt_key_url }}"
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: add google cloud main repository
+  apt_repository:
+    repo: "deb {{ google_cloud_sdk_apt_url }} cloud-sdk-{{ ansible_distribution_release }} main"
+    state: present
+    filename: "google_cloud_sdk"
+  register: google_cloud_sdk_apt_result
+
+- name: ensure right permissions on apt sources list
+  file:
+    path: /etc/apt/sources.list.d/google_cloud_sdk.list
+    owner: root
+    group: root
+    mode: 'u=rw,g=r,o=r'
+
+- name: apt update list for new google cloud repository
+  apt:
+    update_cache: yes
+  when: google_cloud_sdk_apt_result.changed
+
+- name: install google cloud sdk
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - google-cloud-sdk
