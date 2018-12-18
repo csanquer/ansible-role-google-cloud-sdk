@@ -1,2 +1,25 @@
 ---
-# defaults file for google-cloud-sdk
+google_cloud_sdk_install: apt # or manual
+
+# for manual install
+google_cloud_sdk_archive_version: 228.0.0
+
+google_cloud_sdk_default_bashrc: /etc/bash.bashrc
+
+google_cloud_sdk_components:
+  - cloud_sql_proxy
+  - cloud-build-local
+  - docker-credential-gcr
+  - alpha
+  - beta
+  - pubsub-emulator
+  - app-engine-go
+  - app-engine-python
+  - app-engine-python-extras
+
+google_cloud_sdk_users: []
+  # -
+  #   user:
+  #   home:
+  #   bash: true
+  #   zsh: false

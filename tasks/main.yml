@@ -1,6 +1,12 @@
 ---
-- include: install.yml
-  when: ansible_os_family == 'Debian'
+- include: install_manual.yml
+  when: google_cloud_sdk_install == 'manual'
+  tags:
+  - google-cloud-sdk
+  - gcp-sdk
+
+- include: install_apt.yml
+  when: ansible_os_family == 'Debian' and google_cloud_sdk_install != 'manual'
   tags:
   - google-cloud-sdk
   - gcp-sdk

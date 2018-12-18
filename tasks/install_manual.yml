@@ -1,0 +1,56 @@
+---
+- name: download google cloud sdk archive
+  get_url:
+      url: "{{ google_cloud_sdk_archive_url }}{{ google_cloud_sdk_archive_version }}-linux-x86_64.tar.gz"
+      dest: "/tmp/google-cloud-sdk-{{ google_cloud_sdk_archive_version }}-linux-x86_64.tar.gz"
+      mode: 0644
+
+- name: create google install directory
+  file:
+    path: /opt/google/
+    state: directory
+    mode: 0755
+
+- name: extract google cloud sdk binary
+  unarchive:
+    src: "/tmp/google-cloud-sdk-{{ google_cloud_sdk_archive_version }}-linux-x86_64.tar.gz"
+    dest: /opt/google/
+    owner: root
+    group: root
+    mode: 0755
+
+- name: install google cloud sdk
+  command: >
+    bash install.sh -q
+    --additional-components {{ google_cloud_sdk_components|join(' ') }}
+    --rc-path {{ google_cloud_sdk_default_bashrc|default('/etc/bash.bashrc') }}
+  args:
+    chdir: /opt/google/google-cloud-sdk/
+
+- name: enable google cloud sdk path for bash users
+  lineinfile:
+    path: "{{ item.home | default('/home/' ~ item.user) }}/.bashrc"
+    line: "if [ -f '/opt/google/google-cloud-sdk/path.bash.inc' ]; then . '/opt/google/google-cloud-sdk/path.bash.inc'; fi"
+  when: item.bash | default(true)
+  loop: "{{ google_cloud_sdk_users }}"
+
+- name: enable google cloud sdk completion for bash users
+  lineinfile:
+    path: "{{ item.home | default('/home/' ~ item.user) }}/.bashrc"
+    line: "if [ -f '/opt/google/google-cloud-sdk/completion.bash.inc' ]; then . '/opt/google/google-cloud-sdk/completion.bash.inc'; fi"
+  when: item.bash | default(true)
+  loop: "{{ google_cloud_sdk_users }}"
+
+- name: enable google cloud sdk path for zsh users
+  lineinfile:
+    path: "{{ item.home | default('/home/' ~ item.user) }}/.zshrc"
+    line: "if [ -f '/opt/google/google-cloud-sdk/path.zsh.inc' ]; then . '/opt/google/google-cloud-sdk/path.zsh.inc'; fi"
+  when: item.zsh | default(false)
+  loop: "{{ google_cloud_sdk_users }}"
+
+- name: enable google cloud sdk completion for zsh users
+  lineinfile:
+    path: "{{ item.home | default('/home/' ~ item.user) }}/.zshrc"
+    line: "if [ -f '/opt/google/google-cloud-sdk/completion.zsh.inc' ]; then . '/opt/google/google-cloud-sdk/completion.zsh.inc'; fi"
+  when: item.zsh | default(false)
+  loop: "{{ google_cloud_sdk_users }}"
