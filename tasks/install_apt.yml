@@ -24,9 +24,21 @@
     update_cache: yes
   when: google_cloud_sdk_apt_result.changed
 
+- name: install APT dependencies
+  apt:
+    name:
+      - python
+      - python-pip
+    state: present
+
+- name: install Python pip dependencies
+  pip:
+    name:
+      - google_compute_engine
+    state: present
+
 - name: install google cloud sdk
   apt:
-    name: "{{ item }}"
+    name:
+      - google-cloud-sdk
     state: present
-  loop:
-    - google-cloud-sdk
