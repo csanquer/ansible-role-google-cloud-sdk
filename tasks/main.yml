@@ -4,9 +4,11 @@
   tags:
   - google-cloud-sdk
   - gcp-sdk
+  - gcloud
 
 - include: install_apt.yml
   when: ansible_os_family == 'Debian' and google_cloud_sdk_install != 'manual'
   tags:
   - google-cloud-sdk
   - gcp-sdk
+  - gcloud

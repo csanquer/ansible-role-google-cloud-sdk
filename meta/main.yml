@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Charles Sanquer
-  description:
+  description: install Google cloud SDK and CLI tools
   min_ansible_version: 2.6
   license: LGPLv3
   github_branch: master

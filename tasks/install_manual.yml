@@ -19,7 +19,7 @@
     group: root
     mode: 0755
 
-- name: install google cloud sdk
+- name: install google cloud sdk # noqa 301
   command: >
     bash install.sh -q
     --additional-components {{ google_cloud_sdk_components|join(' ') }}

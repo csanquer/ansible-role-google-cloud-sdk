@@ -19,7 +19,7 @@
     group: root
     mode: 'u=rw,g=r,o=r'
 
-- name: apt update list for new google cloud repository
+- name: apt update list for new google cloud repository # noqa 503
   apt:
     update_cache: yes
   when: google_cloud_sdk_apt_result.changed
